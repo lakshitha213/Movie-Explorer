@@ -442,6 +442,9 @@ export default function Home() {
 
             <Typography
               sx={{
+
+                fontFamily: "'Playfair Display', serif",
+
                 fontSize: {
                   xs: "2.8rem",
 
@@ -453,8 +456,6 @@ export default function Home() {
                 lineHeight: 1.02,
 
                 fontWeight: 900,
-
-                fontFamily: "'Playfair Display', serif",
 
                 letterSpacing: "-0.045em",
 
@@ -468,6 +469,10 @@ export default function Home() {
 
                 WebkitTextFillColor:
                   "transparent",
+
+                  "&.MuiTypography-root": {
+      fontFamily: "'Playfair Display', serif !important",
+                  },
               }}
             >
               Discover Your's
