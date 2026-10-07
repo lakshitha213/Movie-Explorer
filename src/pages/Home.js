@@ -422,30 +422,16 @@ export default function Home() {
             {/* Search */}
 
             <Box
-              sx={{
-                width: "100%",
-                maxWidth: 700,
-                p: 1.2,
-                borderRadius: 4,
-
-                background: isDark
-                  ? "rgba(10,10,16,0.7)"
-                  : "rgba(255,255,255,0.85)",
-
-                border: `1px solid ${theme.border}`,
-
-                backdropFilter: "blur(16px)",
-
-                boxShadow: theme.shadow,
-              }}
-            >
-              <SearchBar
-                initialValue={lastSearch || ""}
-                onSearch={(q) =>
-                  runSearch(q, 1, true)
-                }
-              />
-            </Box>
+  sx={{
+    width: "100%",
+    maxWidth: 720,
+  }}
+>
+  <SearchBar
+    initialValue={lastSearch || ""}
+    onSearch={(q) => runSearch(q, 1, true)}
+  />
+</Box>
           </Box>
         </Container>
       </Box>
