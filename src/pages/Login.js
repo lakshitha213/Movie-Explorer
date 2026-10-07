@@ -29,20 +29,32 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const submit = (e) => {
-    e.preventDefault();
+const submit = (e) => {
+  e.preventDefault();
+  setError("");
 
-    if (!username.trim() || !password) {
-      setError("Please enter both username and password.");
-      return;
-    }
+  const envUsername = process.env.REACT_APP_AUTH_USERNAME;
+  const envPassword = process.env.REACT_APP_AUTH_PASSWORD;
 
-    localStorage.setItem("movie_logged_in", "true");
-    localStorage.setItem("movie_username", username.trim());
+  if (!username.trim() || !password) {
+    setError("Please enter both username and password.");
+    return;
+  }
 
-    navigate("/", { replace: true });
-    window.location.reload();
-  };
+  if (
+    username.trim() !== envUsername ||
+    password !== envPassword
+  ) {
+    setError("Invalid username or password.");
+    return;
+  }
+
+  localStorage.setItem("movie_logged_in", "true");
+  localStorage.setItem("movie_username", username.trim());
+
+  navigate("/", { replace: true });
+  window.location.reload();
+};
 
   const fieldStyle = {
     "& .MuiOutlinedInput-root": {
