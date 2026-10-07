@@ -300,7 +300,7 @@ export default function Home() {
 
           overflow: "hidden",
 
-          // LOCAL IMAGE + OVERLAY
+          
           backgroundImage: `
             ${theme.heroOverlay},
             url("${heroImage}")
@@ -308,8 +308,7 @@ export default function Home() {
 
           backgroundSize: "cover",
 
-          // Change to "center" if the important part
-          // of your image is in the center.
+          
           backgroundPosition: "center",
 
           backgroundRepeat: "no-repeat",
@@ -454,6 +453,8 @@ export default function Home() {
                 lineHeight: 1.02,
 
                 fontWeight: 900,
+
+                fontFamily: "'Playfair Display', serif",
 
                 letterSpacing: "-0.045em",
 
