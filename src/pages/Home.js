@@ -470,7 +470,7 @@ export default function Home() {
                   "transparent",
               }}
             >
-              Discover Your
+              Discover Your's
               <br />
               Next Favorite Movie
             </Typography>
