@@ -1,15 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import {Box,Button,CircularProgress,Container,Typography} from "@mui/material";
 
+import React, { useEffect, useRef, useState } from "react";
+import {  Box,  Button,  CircularProgress,  Container,  Typography} from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import LocalFireDepartmentRoundedIcon from "@mui/icons-material/LocalFireDepartmentRounded";
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import MovieRoundedIcon from "@mui/icons-material/MovieRounded";
 
+import heroImage from "../Assets/Featured movie (1).png";
+
 import MovieCard from "../components/MovieCard";
 import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import ErrorMessage from "../components/ErrorMessage";
+
 import { useMovies } from "../context/MovieContext";
 import { useThemeMode } from "../context/ThemeContext";
 
@@ -28,7 +31,7 @@ export default function Home() {
 
   const isDark = mode === "dark";
 
- 
+  const fontFamily = "'Poppins', sans-serif";
 
   const theme = {
     pageBg: isDark ? "#08080d" : "#f7f7fb",
@@ -68,7 +71,9 @@ export default function Home() {
     buttonText: "#ffffff",
 
     purple: "#7c3aed",
+
     purpleLight: "#c084fc",
+
     pink: "#ec4899",
 
     shadow: isDark
@@ -79,36 +84,39 @@ export default function Home() {
       ? `
         linear-gradient(
           90deg,
-          rgba(8,8,13,0.98) 0%,
-          rgba(8,8,13,0.88) 35%,
-          rgba(8,8,13,0.55) 65%,
-          rgba(8,8,13,0.9) 100%
+          rgba(8,8,13,0.72) 0%,
+          rgba(8,8,13,0.48) 35%,
+          rgba(8,8,13,0.18) 65%,
+          rgba(8,8,13,0.58) 100%
         ),
         linear-gradient(
           180deg,
-          rgba(8,8,13,0.15) 50%,
-          #08080d 100%
+          rgba(8,8,13,0.04) 35%,
+          rgba(8,8,13,0.72) 100%
         )
       `
       : `
         linear-gradient(
           90deg,
-          rgba(255,255,255,0.97) 0%,
-          rgba(255,255,255,0.88) 35%,
-          rgba(255,255,255,0.55) 68%,
-          rgba(255,255,255,0.82) 100%
+          rgba(255,255,255,0.72) 0%,
+          rgba(255,255,255,0.48) 35%,
+          rgba(255,255,255,0.18) 65%,
+          rgba(255,255,255,0.58) 100%
         ),
         linear-gradient(
           180deg,
-          rgba(255,255,255,0.15) 45%,
-          #f7f7fb 100%
+          rgba(255,255,255,0.04) 35%,
+          rgba(247,247,251,0.72) 100%
         )
       `,
   };
 
   const [results, setResults] = useState([]);
+
   const [query, setQuery] = useState("");
+
   const [page, setPage] = useState(1);
+
   const [totalPages, setTotalPages] = useState(1);
 
   const [filters, setFilters] = useState({
@@ -120,7 +128,6 @@ export default function Home() {
   const [filterMode, setFilterMode] = useState(false);
 
   const lastLoadedSearch = useRef("");
-
 
   useEffect(() => {
     if (!lastSearch) return;
@@ -140,12 +147,16 @@ export default function Home() {
         if (cancelled) return;
 
         setQuery(lastSearch);
+
         setPage(1);
+
         setTotalPages(data?.total_pages || 1);
+
         setResults(data?.results || []);
+
         setFilterMode(false);
       } catch {
-        
+        // Error handled by MovieContext
       }
     };
 
@@ -155,8 +166,6 @@ export default function Home() {
       cancelled = true;
     };
   }, [lastSearch, search]);
-
-  
 
   const runSearch = async (q, p = 1, replace = true) => {
     const cleanQuery = q.trim();
@@ -174,6 +183,7 @@ export default function Home() {
       const data = await search(cleanQuery, p);
 
       setPage(p);
+
       setTotalPages(data?.total_pages || 1);
 
       setResults((previous) => {
@@ -191,11 +201,10 @@ export default function Home() {
     }
   };
 
- 
-
   const runFilters = async (p = 1, replace = true) => {
     try {
       setFilterMode(true);
+
       setQuery("");
 
       if (replace) {
@@ -211,6 +220,7 @@ export default function Home() {
       const data = await discover(cleanFilters, p);
 
       setPage(p);
+
       setTotalPages(data?.total_pages || 1);
 
       setResults((previous) => {
@@ -228,8 +238,6 @@ export default function Home() {
     }
   };
 
-  
-
   const clearFilters = () => {
     setFilters({
       genre: "",
@@ -238,115 +246,168 @@ export default function Home() {
     });
 
     setResults([]);
+
     setQuery("");
+
     setPage(1);
+
     setTotalPages(1);
+
     setFilterMode(false);
   };
 
-  const hasResults = filterMode || query.length > 0;
-
- 
+  const hasResults =
+    filterMode || query.length > 0;
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
+
+        fontFamily,
+
         background: `linear-gradient(
           180deg,
           ${theme.pageBg} 0%,
           ${theme.pageBgSecondary} 45%,
           ${theme.pageBg} 100%
         )`,
+
         color: theme.text,
+
         transition:
           "background 0.3s ease, color 0.3s ease",
+
+        "& *": {
+          fontFamily: "inherit",
+        },
       }}
     >
-      {/*HERO*/}
+      {/* HERO SECTION*/}
 
       <Box
         sx={{
           position: "relative",
+
           minHeight: {
             xs: 560,
             md: 620,
           },
+
           display: "flex",
+
           alignItems: "center",
+
           overflow: "hidden",
 
+          // LOCAL IMAGE + OVERLAY
           backgroundImage: `
             ${theme.heroOverlay},
-            url("https://image.tmdb.org/t/p/original/8btfz81aR7CR9EL1W3mL7ZbY5zB.jpg")
+            url("${heroImage}")
           `,
 
           backgroundSize: "cover",
+
+          // Change to "center" if the important part
+          // of your image is in the center.
           backgroundPosition: "center",
+
+          backgroundRepeat: "no-repeat",
 
           transition: "all 0.3s ease",
         }}
       >
-        {/* Purple glow */}
+        {/*PURPLE GLOW*/}
 
         <Box
           sx={{
             position: "absolute",
+
             width: 400,
+
             height: 400,
+
             borderRadius: "50%",
+
             background:
               "radial-gradient(circle, rgba(124,58,237,0.22), transparent 70%)",
+
             top: -150,
+
             left: -100,
+
             filter: "blur(20px)",
+
             pointerEvents: "none",
+
+            zIndex: 1,
           }}
         />
 
-        {/* Pink glow */}
+        {/*PINK GLOW*/}
 
         <Box
           sx={{
             position: "absolute",
+
             width: 350,
+
             height: 350,
+
             borderRadius: "50%",
+
             background:
               "radial-gradient(circle, rgba(236,72,153,0.18), transparent 70%)",
+
             bottom: -150,
+
             right: -80,
+
             filter: "blur(20px)",
+
             pointerEvents: "none",
+
+            zIndex: 1,
           }}
         />
+
+        {/*HERO CONTENT*/}
 
         <Container
           maxWidth="xl"
           sx={{
             position: "relative",
+
             zIndex: 2,
+
             py: 8,
           }}
         >
           <Box maxWidth={800}>
-            {/* Label */}
+            {/* MOVIE EXPLORER LABEL */}
 
             <Box
               sx={{
                 display: "inline-flex",
+
                 alignItems: "center",
+
                 gap: 1,
+
                 mb: 2,
+
                 px: 1.8,
+
                 py: 0.8,
+
                 borderRadius: 10,
 
                 background: isDark
                   ? "rgba(255,255,255,0.08)"
                   : "rgba(255,255,255,0.72)",
 
-                border: `1px solid ${theme.border}`,
+                border:
+                  `1px solid ${theme.border}`,
 
                 backdropFilter: "blur(10px)",
 
@@ -358,6 +419,7 @@ export default function Home() {
               <MovieRoundedIcon
                 sx={{
                   fontSize: 18,
+
                   color: theme.purpleLight,
                 }}
               />
@@ -365,8 +427,11 @@ export default function Home() {
               <Typography
                 sx={{
                   fontSize: "0.8rem",
+
                   fontWeight: 700,
+
                   letterSpacing: 1,
+
                   color: theme.text,
                 }}
               >
@@ -374,25 +439,34 @@ export default function Home() {
               </Typography>
             </Box>
 
-            {/* Heading */}
+            {/* HERO HEADING */}
 
             <Typography
               sx={{
                 fontSize: {
                   xs: "2.8rem",
+
                   sm: "4rem",
+
                   md: "5.2rem",
                 },
+
                 lineHeight: 1.02,
+
                 fontWeight: 900,
-                letterSpacing: "-0.04em",
+
+                letterSpacing: "-0.045em",
+
                 mb: 2,
 
                 background:
                   "linear-gradient(135deg, #7c3aed 10%, #ec4899 90%)",
 
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                WebkitBackgroundClip:
+                  "text",
+
+                WebkitTextFillColor:
+                  "transparent",
               }}
             >
               Discover Your
@@ -400,15 +474,24 @@ export default function Home() {
               Next Favorite Movie
             </Typography>
 
+            {/* HERO DESCRIPTION */}
+
             <Typography
               sx={{
                 maxWidth: 600,
+
                 color: theme.textSecondary,
+
                 fontSize: {
                   xs: "1rem",
+
                   md: "1.15rem",
                 },
+
                 lineHeight: 1.7,
+
+                fontWeight: 400,
+
                 mb: 4,
               }}
             >
@@ -419,50 +502,65 @@ export default function Home() {
               watch tonight.
             </Typography>
 
-            {/* Search */}
+            {/* SEARCH */}
 
             <Box
-  sx={{
-    width: "100%",
-    maxWidth: 720,
-  }}
->
-  <SearchBar
-    initialValue={lastSearch || ""}
-    onSearch={(q) => runSearch(q, 1, true)}
-  />
-</Box>
+              sx={{
+                width: "100%",
+
+                maxWidth: 720,
+              }}
+            >
+              <SearchBar
+                initialValue={
+                  lastSearch || ""
+                }
+                onSearch={(q) =>
+                  runSearch(
+                    q,
+                    1,
+                    true
+                  )
+                }
+              />
+            </Box>
           </Box>
         </Container>
       </Box>
 
-      {/* MAIN CONTENT*/}
+      {/*MAIN CONTENT*/}
 
       <Container
         maxWidth="xl"
         sx={{
           py: {
             xs: 5,
+
             md: 7,
           },
         }}
       >
-        {/*FILTERS*/}
+        {/*FILTER SECTION*/}
 
         <Box
           sx={{
             mb: 7,
+
             p: {
               xs: 2.5,
+
               md: 3,
             },
+
             borderRadius: 4,
 
             background: theme.cardBg,
 
-            border: `1px solid ${theme.border}`,
+            border:
+              `1px solid ${theme.border}`,
 
-            backdropFilter: "blur(20px)",
+            backdropFilter:
+              "blur(20px)",
 
             boxShadow: isDark
               ? "none"
@@ -472,11 +570,16 @@ export default function Home() {
               "background 0.3s ease, border 0.3s ease",
           }}
         >
+          {/* FILTER HEADER */}
+
           <Box
             sx={{
               display: "flex",
+
               alignItems: "center",
+
               gap: 1,
+
               mb: 2.5,
             }}
           >
@@ -489,7 +592,9 @@ export default function Home() {
             <Typography
               sx={{
                 fontWeight: 800,
+
                 fontSize: "1.1rem",
+
                 color: theme.text,
               }}
             >
@@ -497,39 +602,61 @@ export default function Home() {
             </Typography>
           </Box>
 
+          {/* FILTER CONTROLS */}
+
           <Filters
             genres={genres}
             filters={filters}
             setFilters={setFilters}
           />
 
+          {/* FILTER BUTTONS */}
+
           <Box
             sx={{
               display: "flex",
+
               gap: 1.5,
+
               mt: 2.5,
+
               flexWrap: "wrap",
             }}
           >
-            {/* APPLY */}
+            {/* APPLY FILTERS */}
 
             <Button
               variant="contained"
-              onClick={() => runFilters(1, true)}
+              onClick={() =>
+                runFilters(
+                  1,
+                  true
+                )
+              }
               disabled={loading}
               sx={{
                 width: 150,
+
                 minWidth: 150,
+
                 height: 46,
 
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display:
+                  "inline-flex",
+
+                alignItems:
+                  "center",
+
+                justifyContent:
+                  "center",
 
                 borderRadius: 3,
 
-                textTransform: "none",
+                textTransform:
+                  "none",
+
                 fontWeight: 700,
+
                 color: "#fff",
 
                 background:
@@ -545,8 +672,10 @@ export default function Home() {
 
                 "&.Mui-disabled": {
                   color: "#fff",
+
                   background:
                     "linear-gradient(135deg,#7c3aed,#ec4899)",
+
                   opacity: 0.65,
                 },
               }}
@@ -555,7 +684,9 @@ export default function Home() {
                 <CircularProgress
                   size={20}
                   thickness={4}
-                  sx={{ color: "#fff" }}
+                  sx={{
+                    color: "#fff",
+                  }}
                 />
               ) : (
                 "Apply Filters"
@@ -569,25 +700,32 @@ export default function Home() {
               disabled={loading}
               sx={{
                 width: 90,
+
                 minWidth: 90,
+
                 height: 46,
 
                 borderRadius: 3,
 
-                textTransform: "none",
+                textTransform:
+                  "none",
+
                 fontWeight: 700,
 
-                color: theme.textSecondary,
+                color:
+                  theme.textSecondary,
 
                 border:
                   `1px solid ${theme.border}`,
 
                 "&:hover": {
-                  background: isDark
-                    ? "rgba(255,255,255,0.06)"
-                    : "rgba(20,20,30,0.05)",
+                  background:
+                    isDark
+                      ? "rgba(255,255,255,0.06)"
+                      : "rgba(20,20,30,0.05)",
 
-                  color: theme.text,
+                  color:
+                    theme.text,
                 },
               }}
             >
@@ -596,31 +734,44 @@ export default function Home() {
           </Box>
         </Box>
 
-        <ErrorMessage message={error} />
+        {/* ERROR */}
+
+        <ErrorMessage
+          message={error}
+        />
 
         {/*SEARCH / FILTER RESULTS*/}
 
         {hasResults && (
           <Box sx={{ mb: 9 }}>
+            {/* RESULTS HEADER */}
+
             <Box
               sx={{
                 display: "flex",
+
                 alignItems: "center",
+
                 gap: 1.2,
+
                 mb: 3,
               }}
             >
               {filterMode ? (
                 <TuneRoundedIcon
                   sx={{
-                    color: theme.purpleLight,
+                    color:
+                      theme.purpleLight,
+
                     fontSize: 30,
                   }}
                 />
               ) : (
                 <SearchRoundedIcon
                   sx={{
-                    color: theme.purpleLight,
+                    color:
+                      theme.purpleLight,
+
                     fontSize: 30,
                   }}
                 />
@@ -630,9 +781,15 @@ export default function Home() {
                 sx={{
                   fontSize: {
                     xs: "1.6rem",
+
                     md: "2rem",
                   },
-                  fontWeight: 850,
+
+                  fontWeight: 800,
+
+                  letterSpacing:
+                    "-0.02em",
+
                   color: theme.text,
                 }}
               >
@@ -642,72 +799,121 @@ export default function Home() {
               </Typography>
             </Box>
 
-            {query && !filterMode && (
-              <Typography
-                sx={{
-                  color: theme.textMuted,
-                  mb: 3,
-                }}
-              >
-                Showing results for{" "}
-                <Box
-                  component="span"
+            {/* SEARCH QUERY */}
+
+            {query &&
+              !filterMode && (
+                <Typography
                   sx={{
-                    color: theme.purpleLight,
-                    fontWeight: 700,
+                    color:
+                      theme.textMuted,
+
+                    mb: 3,
+
+                    fontSize:
+                      "0.95rem",
+
+                    fontWeight: 400,
                   }}
                 >
-                  "{query}"
-                </Box>
-              </Typography>
-            )}
+                  Showing results for{" "}
+                  <Box
+                    component="span"
+                    sx={{
+                      color:
+                        theme.purpleLight,
+
+                      fontWeight: 700,
+                    }}
+                  >
+                    "{query}"
+                  </Box>
+                </Typography>
+              )}
+
+            {/* RESULTS */}
 
             {results.length > 0 ? (
               <>
-                <Box sx={{ position: "relative" }}>
+                <Box
+                  sx={{
+                    position:
+                      "relative",
+                  }}
+                >
+                  {/* MOVIE GRID */}
+
                   <Box
                     className="movie-grid"
                     sx={{
-                      opacity: loading ? 0.6 : 1,
+                      opacity:
+                        loading
+                          ? 0.6
+                          : 1,
+
                       transition:
                         "opacity 0.2s ease",
                     }}
                   >
-                    {results.map((movie) => (
-                      <MovieCard
-                        movie={movie}
-                        key={movie.id}
-                      />
-                    ))}
+                    {results.map(
+                      (movie) => (
+                        <MovieCard
+                          movie={movie}
+                          key={
+                            movie.id
+                          }
+                        />
+                      )
+                    )}
                   </Box>
+
+                  {/* LOADING */}
 
                   {loading && (
                     <Box
                       sx={{
-                        position: "absolute",
+                        position:
+                          "absolute",
+
                         top: 0,
+
                         left: 0,
+
                         right: 0,
+
                         display: "flex",
-                        justifyContent: "center",
+
+                        justifyContent:
+                          "center",
+
                         py: 2,
-                        pointerEvents: "none",
+
+                        pointerEvents:
+                          "none",
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
+                          display:
+                            "flex",
+
+                          alignItems:
+                            "center",
+
+                          justifyContent:
+                            "center",
 
                           width: 42,
+
                           height: 42,
 
-                          borderRadius: "50%",
+                          borderRadius:
+                            "50%",
 
-                          background: isDark
-                            ? "rgba(10,10,16,0.85)"
-                            : "rgba(255,255,255,0.92)",
+                          background:
+                            isDark
+                              ? "rgba(10,10,16,0.85)"
+                              : "rgba(255,255,255,0.92)",
 
                           border:
                             `1px solid ${theme.borderStrong}`,
@@ -715,14 +921,16 @@ export default function Home() {
                           backdropFilter:
                             "blur(10px)",
 
-                          boxShadow: theme.shadow,
+                          boxShadow:
+                            theme.shadow,
                         }}
                       >
                         <CircularProgress
                           size={22}
                           thickness={4}
                           sx={{
-                            color: theme.purple,
+                            color:
+                              theme.purple,
                           }}
                         />
                       </Box>
@@ -732,10 +940,13 @@ export default function Home() {
 
                 {/* LOAD MORE */}
 
-                {page < totalPages && (
+                {page <
+                  totalPages && (
                   <Box
                     sx={{
-                      textAlign: "center",
+                      textAlign:
+                        "center",
+
                       mt: 5,
                     }}
                   >
@@ -756,7 +967,9 @@ export default function Home() {
                       }
                       sx={{
                         width: 150,
+
                         minWidth: 150,
+
                         height: 46,
 
                         display:
@@ -775,12 +988,15 @@ export default function Home() {
 
                         fontWeight: 700,
 
-                        color: theme.text,
+                        color:
+                          theme.text,
 
                         border:
-                          `1px solid ${isDark
-                            ? "rgba(168,85,247,0.5)"
-                            : "rgba(124,58,237,0.35)"}`,
+                          `1px solid ${
+                            isDark
+                              ? "rgba(168,85,247,0.5)"
+                              : "rgba(124,58,237,0.35)"
+                          }`,
 
                         "&:hover": {
                           borderColor:
@@ -814,20 +1030,28 @@ export default function Home() {
                 <Box
                   sx={{
                     py: 8,
-                    textAlign: "center",
+
+                    textAlign:
+                      "center",
                   }}
                 >
                   <MovieRoundedIcon
                     sx={{
                       fontSize: 55,
-                      color: theme.textMuted,
+
+                      color:
+                        theme.textMuted,
+
                       mb: 1,
                     }}
                   />
 
                   <Typography
                     sx={{
-                      color: theme.textMuted,
+                      color:
+                        theme.textMuted,
+
+                      fontWeight: 500,
                     }}
                   >
                     No movies found.
@@ -838,20 +1062,26 @@ export default function Home() {
           </Box>
         )}
 
-        {/*TRENDING*/}
+        {/*TRENDING MOVIES*/}
 
         <Box>
+          {/* TRENDING HEADER */}
+
           <Box
             sx={{
               display: "flex",
+
               alignItems: "center",
+
               gap: 1.2,
+
               mb: 3,
             }}
           >
             <LocalFireDepartmentRoundedIcon
               sx={{
                 color: "#f97316",
+
                 fontSize: 30,
               }}
             />
@@ -860,17 +1090,23 @@ export default function Home() {
               sx={{
                 fontSize: {
                   xs: "1.6rem",
+
                   md: "2rem",
                 },
 
-                fontWeight: 850,
-                letterSpacing: "-0.02em",
+                fontWeight: 800,
+
+                letterSpacing:
+                  "-0.02em",
+
                 color: theme.text,
               }}
             >
               Trending This Week
             </Typography>
           </Box>
+
+          {/* TRENDING GRID */}
 
           {trending.length > 0 ? (
             <Box className="movie-grid">
@@ -887,20 +1123,27 @@ export default function Home() {
             <Box
               sx={{
                 py: 8,
-                textAlign: "center",
+
+                textAlign:
+                  "center",
               }}
             >
               <CircularProgress
                 size={28}
                 sx={{
-                  color: theme.purple,
+                  color:
+                    theme.purple,
+
                   mb: 2,
                 }}
               />
 
               <Typography
                 sx={{
-                  color: theme.textMuted,
+                  color:
+                    theme.textMuted,
+
+                  fontWeight: 500,
                 }}
               >
                 Loading trending movies...
